@@ -23,7 +23,7 @@ pipeline {
                 script{
                     timeout(time: 30){
                         FAILED_STAGE='Pull Repo'
-                        git branch: 'dev', credentialsId: 'github', url: 'https://github.com/kusumaningrat/Web-Service-Php-Info.git'
+                        git branch: 'main', credentialsId: 'github', url: 'https://github.com/kusumaningrat/Web-Service-Php-Info.git'
                     }
                 }
             }
@@ -56,6 +56,21 @@ pipeline {
                         // Push the image
                         docker.image("${env.GENERATED_IMAGE}").push()
                     }
+                }
+            }
+        }
+
+        stage('Deploy to docker') {
+            steps {
+                script {
+                    FAILED_STAGE = 'Deploy Locally'
+                    echo "Deploying ${env.GENERATED_IMAGE} locally..."
+                    
+                    sh '''
+                    docker-compose down
+                    docker-compose pull
+                    docker-compose up -d --remove-orphans
+                    '''
                 }
             }
         }
