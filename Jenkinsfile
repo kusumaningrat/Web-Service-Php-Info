@@ -34,12 +34,12 @@ pipeline {
                     FAILED_STAGE='Build'
                     timeout(time: 30){
                         def currentDate = sh(returnStdout: true, script: 'date +"%Y%m%d"').trim()
-                        def uid = UUID.randomUUID().toString().substring(0, 6)
-                        def combinedString = "${currentDate}-${uid}"
-                        def image = "${env.IMAGE}:${combinedString}"
-                        env.GENERATED_IMAGE= "${env.IMAGE}:${combinedString}"
+                        // def uid = UUID.randomUUID().toString().substring(0, 6)
+                        // def combinedString = "${currentDate}-${uid}"
+                        // def image = "${env.IMAGE}:${combinedString}"
+                        env.GENERATED_IMAGE= "${env.IMAGE}:latest"
                         
-                        echo "Current Date + UID: ${combinedString}"
+                        // echo "Current Date + UID: ${combinedString}"
 
                         dockerImage = docker.build image
                     }
@@ -69,6 +69,7 @@ pipeline {
                     sh '''
                     docker-compose down
                     docker-compose pull
+                    echo '${HUB_PASSWORD}' | docker login -u '${HUB_USERNAME}' --password-stdin https://index.docker.io/v1/
                     docker-compose up -d --remove-orphans
                     '''
                 }
