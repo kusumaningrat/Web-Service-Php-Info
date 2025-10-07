@@ -67,9 +67,8 @@ pipeline {
                     echo "Deploying ${env.GENERATED_IMAGE} locally..."
                     
                     sh '''
-                    docker-compose down
-                    docker-compose pull
-                    echo '${HUB_PASSWORD}' | docker login -u '${HUB_USERNAME}' --password-stdin https://index.docker.io/v1/
+                    docker compose up --force-recreate -d web
+                    echo ${HUB_PASSWORD} | docker login -u ${HUB_USERNAME} --password-stdin https://index.docker.io/v1/
                     docker-compose up -d --remove-orphans
                     '''
                 }
