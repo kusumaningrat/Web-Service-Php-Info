@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    image: ${HUB_USERNAME}/webservice:latest
+    image: "${HUB_USERNAME}/webservice:latest"
     container_name: webservice
     ports:
       - "80:80"
