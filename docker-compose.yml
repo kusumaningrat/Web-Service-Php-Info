@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  web:
+    image: webservice:v1.1
+    container_name: webservice
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./www:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+
+  db:
+    image: mysql:8.0
+    container_name: mydb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: P3tern4kCl0ud5
+      MYSQL_DATABASE: webservice
+      MYSQL_USER: clouders
+      MYSQL_PASSWORD: P3tern4kCl0ud5
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - "3309:3306"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
